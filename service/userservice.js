@@ -64,7 +64,7 @@ const updateUser = async (req, res) => {
     try {
         let id = req.params.id
 
-        const user = await User.query().findById(id).patch(req.body)
+        const user = await User.query().findById(id).update(req.body)
 
         res.status(200).send({ status: 200, message: "User Data Updated Successfully", data: user })
     }
