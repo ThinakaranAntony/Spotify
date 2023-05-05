@@ -2,6 +2,8 @@ const User = require('../models/usermodel')
 const nodemailer = require('nodemailer')
 const otp = require('generate-password')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -10,6 +12,8 @@ const transporter = nodemailer.createTransport({
         pass: 'ncuhzozzivvmtwws'
     }
 });
+
+
 
 function sendmail(tomail, otp) {
     const mailoptions = {
@@ -89,10 +93,20 @@ const deleteUser = async (req, res) => {
 
 }
 
+
+const login = async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const user = { username: username ,password : password};
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN);
+    res.json({ accessToken: accessToken })
+}
+
 module.exports = {
     addUser,
     getAllUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    login
 
 }

@@ -7,9 +7,9 @@ module.exports = {
   development: {
     client: 'mysql',
     connection: {
-      user: 'root', 
-      password: 'Antony@980828', 
-      database: 'spotifydb'
+      user: process.env.user, 
+      password: process.env.password, 
+      database: process.env.database
     },
   },
 
