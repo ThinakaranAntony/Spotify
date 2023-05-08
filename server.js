@@ -8,10 +8,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 const router1 = require('./routes/userrouter')
+const router2 = require('./routes/songsrouter')
 
 app.use("/user", router1);
+app.use("/song",router2)
 
-const PORT = process.env.DB_PORT || 8055
+const PORT = process.env.PORT
 
 
 app.listen(PORT, () => {
