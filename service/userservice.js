@@ -38,15 +38,15 @@ const addUser = async (req, res) => {
     try {
         let info = {
             username: req.body.username,
-            password:hashpassword,
+            password: hashpassword,
             email: req.body.email,
             role: req.body.role
         }
         const new_otp = otp.generate({
-            length:4
+            length: 4
         })
         const user = await User.query().insert(info)
-        sendmail(req.body.email,new_otp)
+        sendmail(req.body.email, new_otp)
         res.status(200).send({ status: 200, message: "User Created", data: user })
     }
     catch (err) {
@@ -94,10 +94,36 @@ const deleteUser = async (req, res) => {
 }
 
 
+const userwallet = async (req, res) => {
+    try {
+        let id =  req.params.id   
+        const user = await User.query().findById(id).update(req.body)
+        res.status(200).send({ status: 200, message: "Amount Added Successfully. Your wallet amount is "+ req.body.wallet, data: user })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Amount not added", data: "" + err })
+    }
+}
+
+const addsubscription = async(req,res)=> {
+    try{
+        let id = req.params.id
+        const user = await User.query().findById(id)
+        user.wallet = user.wallet - (Number(req.body.month) * 100)
+        user.usertype = "Premium User"
+        const user1 = await User.query().findById(id).update(user)
+        res.status(200).send({ status: 200, message: "Subscription Added. Your remaining Wallet Amount is "+ user.wallet, data: user1 })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Subscription Failure", data: "" + err })
+    }
+}
+
+
 const login = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    const user = { username: username ,password : password};
+    const user = { username: username, password: password };
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN);
     res.json({ accessToken: accessToken })
 }
@@ -107,6 +133,8 @@ module.exports = {
     getAllUsers,
     updateUser,
     deleteUser,
-    login
+    login,
+    userwallet,
+    addsubscription
 
 }

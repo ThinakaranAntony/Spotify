@@ -8,7 +8,9 @@ exports.up = function(knex) {
         table.string("username");
         table.string("password");
         table.string("email");
-        table.string("role");
+        table.string("role"); 
+        table.integer("wallet").defaultTo(0)
+        table.string("usertype").defaultTo("Non Premium User")       
     });
 };
 
