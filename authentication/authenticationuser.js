@@ -10,17 +10,74 @@ const authenticateToken = (req,res,next) => {
         if(err){
             return res.sendStatus(403);
         }
-        console.log(user.username)
-const userdb = await users.findOne({
-    where : {username:user.username} 
-})
+const userdb = await users.query().findOne('username',user.username)
 if(userdb == null){
     res.send("Not an User")
 }
        else{
-        next();
+        if(userdb.usertype == "Premium User"){
+            req.body.user = user.username
+            next();
+        }
+        else{
+            if(userdb.role == "Artist"){
+                res.send("Sorry !!! You are an Artist, You are not accessible for playing other songs.")
+            }
+            else{
+            res.send("Not an Premium User")
+            }
+        }
+
        } 
     })
 }
 
-module.exports ={authenticateToken} 
+const authenticateToken1 = (req,res,next) => {
+    
+    const token = req.headers['authorization'];
+    if(!token) return res.sendStatus(401);
+
+    jwt.verify(token,process.env.ACCESS_TOKEN,async(err,user) => {
+        if(err){
+            return res.sendStatus(403);
+        }
+const userdb = await users.query().findOne('username',user.username)
+if(userdb == null){
+    res.send("Not an User")
+}
+       else{
+       
+            req.body.user = user.username
+            next();
+       } 
+    })
+}
+
+const authenticateToken2 = (req,res,next) => {
+    
+    const token = req.headers['authorization'];
+    if(!token) return res.sendStatus(401);
+
+    jwt.verify(token,process.env.ACCESS_TOKEN,async(err,user) => {
+        if(err){
+            return res.sendStatus(403);
+        }
+const userdb = await users.query().findOne('username',user.username)
+if(userdb == null){
+    res.send("Not an User")
+}
+       else{
+        if(userdb.role == "Artist"){
+            req.body.user = user.username
+            next();
+        }
+        else{
+            res.send("You are not an Artist ")
+        }
+
+       } 
+    })
+}
+module.exports ={authenticateToken,
+                authenticateToken1,
+                authenticateToken2} 

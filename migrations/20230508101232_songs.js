@@ -10,7 +10,9 @@ exports.up = function(knex) {
         table.string("music");
         table.string("lyrics");
         table.string("singername");
-        table.string("songtype")      
+        table.string("songtype");
+        table.string("Artist")
+
     });
 };
 

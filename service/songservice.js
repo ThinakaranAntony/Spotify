@@ -8,7 +8,8 @@ const addsong = async (req, res) => {
             music: req.body.music,
             lyrics: req.body.lyrics,
             singername: req.body.singername,
-            songtype: req.body.songtype
+            songtype: req.body.songtype,
+            Artist:req.body.Artist
         }
         const song = await Song.query().insert(info)
         res.status(200).send({ status: 200, message: "Song Added", data: song })
@@ -46,8 +47,50 @@ const deletesong = async (req, res) => {
 
 }
 
+const showpublicsongs = async (req,res) => {
+    try {
+        const npmsongs = await Song.query().where('songtype', 'public')
+
+        res.status(200).send({ status: 200, message: "Showing Public Songs", data: npmsongs })
+    }
+
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Failed to show Public Songs",data: "" + err })
+    }
+
+}
+
+const showpremiumsongs = async (req,res) => {
+    try{
+        const premsongs = await Song.query().where('songtype','Premium')
+
+        res.status(200).send({ status: 200, message: "Showing Premium Songs", data: premsongs })
+    }
+
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Failed to show Premium Songs",data: "" + err })
+    }
+}
+
+const artistsong = async (req,res) => {
+    try{
+        const art = await Song.query().where("Artist",req.body.user)
+
+        res.status(200).send({ status: 200, message: "Showing Your Songs", data: art })
+    }
+
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Failed to show your songs",data: "" + err })
+    }
+}
+
+
 module.exports = {
     addsong,
     updatesong,
-    deletesong
+    deletesong,
+    showpublicsongs,
+    showpremiumsongs,
+    artistsong
+
 }
