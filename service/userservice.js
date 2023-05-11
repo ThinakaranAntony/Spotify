@@ -4,6 +4,7 @@ const otp = require('generate-password')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
+const walletmon = require('../models/walletmoneymodel')
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -53,6 +54,7 @@ const addUser = async (req, res) => {
         res.status(404).send({ status: 404, message: "User not Created", data: "" + err })
     }
 }
+
 const getAllUsers = async (req, res) => {
     try {
         let users = await User.query()
@@ -93,26 +95,30 @@ const deleteUser = async (req, res) => {
 
 }
 
-
 const userwallet = async (req, res) => {
     try {
-        let id =  req.params.id   
+        let id = req.params.id
+        const wallet = await walletmon.query().where('Wallets',req.body.wallet)
+        console.log(wallet)
+if (wallet.length <1 ){
+return res.send ("Amount should be on " )
+}
         const user = await User.query().findById(id).update(req.body)
-        res.status(200).send({ status: 200, message: "Amount Added Successfully. Your wallet amount is "+ req.body.wallet, data: user })
+        res.status(200).send({ status: 200, message: "Amount Added Successfully. Your wallet amount is " + req.body.wallet, data: user })
     }
     catch (err) {
         res.status(404).send({ status: 404, message: "Amount not added", data: "" + err })
     }
 }
 
-const addsubscription = async(req,res)=> {
-    try{
+const addsubscription = async (req, res) => {
+    try {
         let id = req.params.id
         const user = await User.query().findById(id)
         user.wallet = user.wallet - (Number(req.body.month) * 100)
         user.usertype = "Premium User"
         const user1 = await User.query().findById(id).update(user)
-        res.status(200).send({ status: 200, message: "Subscription Added. Your remaining Wallet Amount is "+ user.wallet, data: user1 })
+        res.status(200).send({ status: 200, message: "Subscription Added. Your remaining Wallet Amount is " + user.wallet, data: user1 })
     }
     catch (err) {
         res.status(404).send({ status: 404, message: "Subscription Failure", data: "" + err })
