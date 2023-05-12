@@ -9,7 +9,6 @@ class Songs extends Model {
     static get jsonSchema() {
         return {
             type: 'object',
-            required: ['songname'],
             properties: {
                 id: { type: 'integer' },
                 songname: { type: 'string' },

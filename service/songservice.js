@@ -1,4 +1,5 @@
 const Song = require('../models/songsmodel')
+const comm = require('../models/commentsmodel')
 
 const addsong = async (req, res) => {
     try {
@@ -23,6 +24,7 @@ const updatesong = async (req, res) => {
     try {
         let id = req.params.id
         const song = await Song.query().findById(id).update(req.body)
+        
 
         res.status(200).send({ status: 200, message: "Song Details Updated Successfully", data: song })
     }
@@ -84,6 +86,31 @@ const artistsong = async (req,res) => {
     }
 }
 
+const userlike = async (req,res) => {
+    try{
+        let id = req.params.id
+        const like1 = await Song.query().findById(id)
+        req.body.Likes = like1.Likes + req.body.Likes
+        const like = await Song.query().findById(id).update(req.body)
+
+        res.status(200).send({ status: 200, message: "Liked", data: like })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Failed to Like song",data: "" + err })
+    }
+}
+
+const comments = async (req,res) => {
+    try {
+    const add = {comment:req.body.comment,Songid:req.params.id }
+    let id = req.params.id
+    const usercomment = await comm.query().insert(add)
+        res.status(200).send({ status: 200, message: "Comment Added", data: usercomment })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Comment not Added", data: "" + err })
+    }
+}
 
 module.exports = {
     addsong,
@@ -91,6 +118,8 @@ module.exports = {
     deletesong,
     showpublicsongs,
     showpremiumsongs,
-    artistsong
+    artistsong,
+    userlike,
+    comments
 
 }

@@ -95,14 +95,29 @@ const deleteUser = async (req, res) => {
 
 }
 
+const subscriptiondetails = async (req, res) => {
+
+    try {
+        const wall = await walletmon.query().select("Wallets")
+        let money = []
+        wall.map(n=>money.push(n.Wallets))
+        res.status(200).send({ status: 200, message: "Step 1: Fixed Amount :" + money + "Step 2:  Add a Fixed money to user wallet \n Step 3: Then Add a subscription for month wise by using a wallet money \n Step 4: Each Month costs 100rs" })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Failed to load Subscription Details", data: "" + err })
+    }
+}
+
 const userwallet = async (req, res) => {
     try {
         let id = req.params.id
-        const wallet = await walletmon.query().where('Wallets',req.body.wallet)
+        const wallet = await walletmon.query().where('Wallets', req.body.wallet)
         console.log(wallet)
-if (wallet.length <1 ){
-return res.send ("Amount should be on " )
-}
+        if (wallet.length < 1) {
+            return res.send("Only Fixed Amount can be added")
+        }
+        const user1 = await User.query().findById(id)
+        req.body.wallet = user1.wallet + req.body.wallet
         const user = await User.query().findById(id).update(req.body)
         res.status(200).send({ status: 200, message: "Amount Added Successfully. Your wallet amount is " + req.body.wallet, data: user })
     }
@@ -141,6 +156,7 @@ module.exports = {
     deleteUser,
     login,
     userwallet,
-    addsubscription
+    addsubscription,
+    subscriptiondetails
 
 }

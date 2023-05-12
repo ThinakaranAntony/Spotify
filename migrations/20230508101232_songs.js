@@ -12,6 +12,7 @@ exports.up = function(knex) {
         table.string("singername");
         table.string("songtype");
         table.string("Artist")
+        table.integer("Likes")
 
     });
 };
