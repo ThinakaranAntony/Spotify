@@ -1,7 +1,7 @@
 const Walletmoney = require('../models/walletmoneymodel')
 const adminaddingwalletmoney = async (req, res) => {
     try {
-        let info = {Wallets:req.body.Wallets}
+        let info = { Wallets: req.body.Wallets }
         const money = await Walletmoney.query().insert(info)
         res.status(200).send({ status: 200, message: "Fixed Amount Added", data: money })
     }

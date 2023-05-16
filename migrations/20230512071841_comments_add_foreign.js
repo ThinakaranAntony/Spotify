@@ -2,17 +2,17 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
-        return knex.schema.table("comments", table => {
-            table.foreign("Songid").references("songs.id");
-        });
-    };
+exports.up = function (knex) {
+    return knex.schema.table("comments", table => {
+        table.foreign("Songid").references("songs.id");
+    });
+};
 
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
+exports.down = function (knex) {
     return knex.schema.table("comments", table => {
         table.dropForeign("Songid");
     });

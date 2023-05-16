@@ -100,7 +100,7 @@ const subscriptiondetails = async (req, res) => {
     try {
         const wall = await walletmon.query().select("Wallets")
         let money = []
-        wall.map(n=>money.push(n.Wallets))
+        wall.map(n => money.push(n.Wallets))
         res.status(200).send({ status: 200, message: "Step 1: Fixed Amount :" + money + "Step 2:  Add a Fixed money to user wallet \n Step 3: Then Add a subscription for month wise by using a wallet money \n Step 4: Each Month costs 100rs" })
     }
     catch (err) {
@@ -140,6 +140,29 @@ const addsubscription = async (req, res) => {
     }
 }
 
+const adminnonpremiumuser = async (req, res) => {
+    try {
+        let user = await User.query().where('usertype', 'Non Premium User')
+        res.status(200).send({ status: 200, message: "Showing Non Premium Users", data: user })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Data not Fetched", data: "" + err })
+    }
+
+}
+
+const adminpremiumuser = async (req, res) => {
+    try {
+        let user = await User.query().where('usertype', 'Premium User')
+        res.status(200).send({ status: 200, message: "Showing Premium Users", data: user })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Data not Fetched", data: "" + err })
+    }
+
+}
+
+
 
 const login = async (req, res) => {
     const username = req.body.username;
@@ -157,6 +180,7 @@ module.exports = {
     login,
     userwallet,
     addsubscription,
-    subscriptiondetails
-
+    subscriptiondetails,
+    adminnonpremiumuser,
+    adminpremiumuser
 }
