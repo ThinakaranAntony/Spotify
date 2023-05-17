@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
 const walletmon = require('../models/walletmoneymodel')
-
+let otp1;
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -13,8 +13,6 @@ const transporter = nodemailer.createTransport({
         pass: 'ncuhzozzivvmtwws'
     }
 });
-
-
 
 function sendmail(tomail, otp) {
     const mailoptions = {
@@ -43,9 +41,17 @@ const addUser = async (req, res) => {
             email: req.body.email,
             role: req.body.role
         }
-        const new_otp = otp.generate({
-            length: 4
+        if (info.role == "Admin") {
+            info.usertype = "Premium User"
+
+        }
+        var new_otp = otp.generate({
+            length: 4,
+            numbers: true,
+            uppercase: false,
+            lowercase: false
         })
+        otp1 = new_otp
         const user = await User.query().insert(info)
         sendmail(req.body.email, new_otp)
         res.status(200).send({ status: 200, message: "User Created", data: user })
@@ -54,6 +60,19 @@ const addUser = async (req, res) => {
         res.status(404).send({ status: 404, message: "User not Created", data: "" + err })
     }
 }
+
+const checkotp = async (req, res) => {
+
+    try {
+        if (otp1 == req.body.otp) {
+            res.status(200).send({ status: 200, message: "Account Verification Successfull" })
+        }
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Wrong OTP", data: "" + err })
+    }
+}
+
 
 const getAllUsers = async (req, res) => {
     try {
@@ -70,14 +89,42 @@ const updateUser = async (req, res) => {
     try {
         let id = req.params.id
 
-        const user = await User.query().findById(id).update(req.body)
 
-        res.status(200).send({ status: 200, message: "User Data Updated Successfully", data: user })
+        if (req.body.email) {
+            var new_otp = otp.generate({
+                length: 4,
+                numbers: true,
+                uppercase: false,
+                lowercase: false
+            })
+            sendmail(req.body.email, new_otp)
+            const user = await User.query().findById(id).update(req.body)
+            otp1 = new_otp
+            res.status(200).send({ status: 200, message: "OTP Sended to Email", data: user })
+        }
+        else {
+            const user = await User.query().findById(id).update(req.body)
+            res.status(200).send({ status: 200, message: "Data Updated Successfully", data: user })
+        }
     }
     catch (err) {
         res.status(404).send({ status: 404, message: "Data not Updated", data: "" + err })
     }
 }
+
+const emailcheckotp = async (req, res) => {
+    try {
+        if (otp1 == req.body.otp) {
+            res.status(200).send({ status: 200, message: "Email Updated Succesfully" })
+        } else {
+            res.status(200).send({ status: 200, message: "Sorry !! Failed to update Email" })
+        }
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "Sorry !! Failed to update Email", data: "" + err })
+    }
+}
+
 
 
 const deleteUser = async (req, res) => {
@@ -164,6 +211,8 @@ const adminpremiumuser = async (req, res) => {
 
 
 
+
+
 const login = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -182,5 +231,7 @@ module.exports = {
     addsubscription,
     subscriptiondetails,
     adminnonpremiumuser,
-    adminpremiumuser
+    adminpremiumuser,
+    checkotp,
+    emailcheckotp
 }
