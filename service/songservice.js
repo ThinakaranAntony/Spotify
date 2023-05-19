@@ -75,8 +75,9 @@ const showpremiumsongs = async (req, res) => {
 }
 
 const artistsong = async (req, res) => {
+    console.log(req.body.user);
     try {
-        const art = await Song.query().where("Artist", req.body.user)
+        const art = await Song.query().where("Artist", req.body.Artist)
 
         res.status(200).send({ status: 200, message: "Showing Your Songs", data: art })
     }

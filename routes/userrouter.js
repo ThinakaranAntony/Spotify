@@ -10,7 +10,7 @@ router.delete('/deleteuser/:id', auth.authenticateToken3, userservice.deleteUser
 router.post('/login', userservice.login)
 router.put('/addmoney/:id', auth.authenticateToken3, userservice.userwallet)
 router.put('/addsubscription/:id', auth.authenticateToken3, userservice.addsubscription)
-router.get('/subscriptiondetails', auth.authenticateToken3, userservice.subscriptiondetails)
+router.get('/subscriptiondetails', userservice.subscriptiondetails)
 router.get('/premiumuser',auth.authenticateToken4,userservice.adminpremiumuser)
 router.get('/nonpremiumuser',auth.authenticateToken4,userservice.adminnonpremiumuser)
 router.post('/checkotp',userservice.checkotp)

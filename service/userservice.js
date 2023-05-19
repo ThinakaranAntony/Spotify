@@ -67,22 +67,25 @@ const addUser = async (req, res) => {
 const addAdmin = async (req, res) => {
     const hashpassword = await bcrypt.hash(req.body.password, 8)
     try {
-        let info = {
-            username: req.body.username,
-            password: hashpassword,
-            email: req.body.email,
-            role: req.body.role
-        }
-        if (info.role == "Admin") {
-            info.usertype = "Premium User"
-
-        }
         var new_otp = otp.generate({
             length: 4,
             numbers: true,
             uppercase: false,
             lowercase: false
         })
+        
+        let info = {
+            username: req.body.username,
+            password: hashpassword,
+            email: req.body.email,
+            role: req.body.role,
+            Verification: new_otp
+        }
+        if (info.role == "Admin") {
+            info.usertype = "Premium User"
+
+        }
+
         otp1 = new_otp
         const user = await User.query().insert(info)
         sendmail(req.body.email, new_otp)
