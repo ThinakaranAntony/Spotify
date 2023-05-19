@@ -35,6 +35,38 @@ function sendmail(tomail, otp) {
 const addUser = async (req, res) => {
     const hashpassword = await bcrypt.hash(req.body.password, 8)
     try {
+        var new_otp = otp.generate({
+            length: 4,
+            numbers: true,
+            uppercase: false,
+            lowercase: false
+        })
+
+        let info = {
+            username: req.body.username,
+            password: hashpassword,
+            email: req.body.email,
+            role: req.body.role,
+            Verification: new_otp
+        }
+        if (info.role == "Admin") {
+            return res.status(404).send({status: 404, message: "Admin cannot be added", data: "" + err})
+
+        }
+
+        otp1 = new_otp
+        const user = await User.query().insert(info)
+        sendmail(req.body.email, new_otp)
+        res.status(200).send({ status: 200, message: "User Created", data: user })
+    }
+    catch (err) {
+        res.status(404).send({ status: 404, message: "User not Created", data: "" + err })
+    }
+}
+
+const addAdmin = async (req, res) => {
+    const hashpassword = await bcrypt.hash(req.body.password, 8)
+    try {
         let info = {
             username: req.body.username,
             password: hashpassword,
@@ -54,17 +86,20 @@ const addUser = async (req, res) => {
         otp1 = new_otp
         const user = await User.query().insert(info)
         sendmail(req.body.email, new_otp)
-        res.status(200).send({ status: 200, message: "User Created", data: user })
+        res.status(200).send({ status: 200, message: "Admin Added Successfully", data: user })
     }
     catch (err) {
-        res.status(404).send({ status: 404, message: "User not Created", data: "" + err })
+        res.status(404).send({ status: 404, message: "Admin not Added", data: "" + err })
     }
 }
 
 const checkotp = async (req, res) => {
 
     try {
-        if (otp1 == req.body.otp) {
+        let user = await User.query().findOne("Verification", otp1)
+        if (user.Verification == req.body.otp) {
+        user.Verification = "Verified"
+            const user1 = await User.query().findOne("Verification", otp1).update(user)
             res.status(200).send({ status: 200, message: "Account Verification Successfull" })
         }
     }
@@ -233,5 +268,6 @@ module.exports = {
     adminnonpremiumuser,
     adminpremiumuser,
     checkotp,
-    emailcheckotp
+    emailcheckotp,
+    addAdmin
 }

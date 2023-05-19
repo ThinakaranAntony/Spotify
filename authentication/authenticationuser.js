@@ -89,7 +89,7 @@ const authenticateToken3 = (req, res, next) => {
         }
         const userdb = await users.query().findOne('username', user.username)
         if (userdb == null) {
-           return res.send("Not an User")
+            return res.send("Not an User")
         }
         else {
             next();
@@ -108,17 +108,17 @@ const authenticateToken4 = (req, res, next) => {
         }
         const userdb = await users.query().findOne('username', user.username)
         if (userdb == null) {
-           return res.send("Not an User")
+            return res.send("Not an User")
         }
         else {
-             
-                if (userdb.role == "Admin") {
-                    req.body.user = user.username
-                    next();
-                }
-                else {
-                    res.send("You are not an Admin ")
-                }
+
+            if (userdb.role == "Admin") {
+                req.body.user = user.username
+                next();
+            }
+            else {
+                res.send("You are not an Admin ")
+            }
         }
     })
 }
