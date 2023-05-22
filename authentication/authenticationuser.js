@@ -92,6 +92,7 @@ const authenticateToken3 = (req, res, next) => {
             return res.send("Not an User")
         }
         else {
+            req.userid  = userdb.id
             next();
         }
     })

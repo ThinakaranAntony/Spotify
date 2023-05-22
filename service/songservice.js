@@ -1,5 +1,6 @@
 const Song = require('../models/songsmodel')
 const comm = require('../models/commentsmodel')
+const Like = require('../models/likemodel')
 
 const addsong = async (req, res) => {
     try {
@@ -90,7 +91,16 @@ const artistsong = async (req, res) => {
 const userlike = async (req, res) => {
     try {
         let id = req.params.id
+        console.log(req.body.userid);
+
         const like1 = await Song.query().findById(id)
+        
+        const likes = await Like.query().findOne({ 'songid': req.params.id, 'userid': req.userid })
+        if (likes) {
+            return  res.status(200).send({ status: 200, message: "You have already liked this song", data: null })
+        }
+        data = { songid: Number(req.params.id), userid: req.userid }
+        const like2 = await Like.query().insert(data)
         req.body.Likes = like1.Likes + req.body.Likes
         const like = await Song.query().findById(id).update(req.body)
 
