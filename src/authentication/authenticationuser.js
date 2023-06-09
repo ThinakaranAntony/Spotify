@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 const users = require("../models/usermodel")
 require('dotenv').config();
-const authenticateToken = (req, res, next) => {
 
+const authenticateToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) return res.sendStatus(401);
-
     jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
         if (err) {
             return res.sendStatus(403);
@@ -17,6 +16,7 @@ const authenticateToken = (req, res, next) => {
         else {
             if (userdb.usertype == "Premium User") {
                 req.body.user = user.username
+                req.art = user.username
                 next();
             }
             else {
@@ -33,10 +33,8 @@ const authenticateToken = (req, res, next) => {
 }
 
 const authenticateToken1 = (req, res, next) => {
-
     const token = req.headers['authorization'];
     if (!token) return res.sendStatus(401);
-
     jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
         if (err) {
             return res.sendStatus(403);
@@ -47,16 +45,15 @@ const authenticateToken1 = (req, res, next) => {
         }
         else {
             req.body.user = user.username
+            req.art = user.username
             next();
         }
     })
 }
 
 const authenticateToken2 = (req, res, next) => {
-
     const token = req.headers['authorization'];
     if (!token) return res.sendStatus(401);
-
     jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
         if (err) {
             return res.sendStatus(403);
@@ -73,16 +70,13 @@ const authenticateToken2 = (req, res, next) => {
             else {
                 res.send("You are not an Artist ")
             }
-
         }
     })
 }
 
 const authenticateToken3 = (req, res, next) => {
-
     const token = req.headers['authorization'];
     if (!token) return res.sendStatus(401);
-
     jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
         if (err) {
             return res.sendStatus(403);
@@ -92,17 +86,16 @@ const authenticateToken3 = (req, res, next) => {
             return res.send("Not an User")
         }
         else {
-            req.userid  = userdb.id
+            req.userid = userdb.id
+            req.art = user.username
             next();
         }
     })
 }
 
 const authenticateToken4 = (req, res, next) => {
-
     const token = req.headers['authorization'];
     if (!token) return res.sendStatus(401);
-
     jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
         if (err) {
             return res.sendStatus(403);
@@ -112,9 +105,9 @@ const authenticateToken4 = (req, res, next) => {
             return res.send("Not an User")
         }
         else {
-
             if (userdb.role == "Admin") {
                 req.body.user = user.username
+                req.art = user.username
                 next();
             }
             else {

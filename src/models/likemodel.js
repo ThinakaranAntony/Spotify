@@ -1,20 +1,21 @@
 const { Model } = require('objection');
-const knex = require('../config/dbconfig');
+const knex = require('../../config/dbconfig');
 Model.knex(knex);
 
-class Walletmoney extends Model {
+class Like extends Model {
     static get tableName() {
-        return 'walletmoney';
+        return 'like';
     }
     static get jsonSchema() {
         return {
             type: 'object',
             properties: {
                 id: { type: 'integer' },
-                Wallets: { type: 'integer' },
-
+                songid: { type: 'integer' },
+                userid: { type: 'integer' }
             }
         }
     }
 }
-module.exports = Walletmoney;
+module.exports = Like;
+

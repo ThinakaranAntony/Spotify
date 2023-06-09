@@ -1,5 +1,5 @@
 const { Model } = require('objection');
-const knex = require('../config/dbconfig');
+const knex = require('../../config/dbconfig');
 Model.knex(knex);
 
 class Songs extends Model {
