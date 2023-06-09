@@ -162,15 +162,11 @@ const deleteUser = async (req, res) => {
 
 const subscriptionDetails = async (req, res) => {
     try {
-        console.log("1");
         const user1 = await userService.Findone({ username: req.art })
-        console.log("1");
         if (user1.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
-        console.log("1");
         const wall = await walletservice.Select("Wallets");
-        console.log("1");
         let money = [];
         wall.map(n => money.push(n.Wallets))
         res.status(200).send({ status: 200, message: "Step 1: Fixed Amount :" + money + "Step 2:  Add a Fixed money to user wallet \n Step 3: Then Add a subscription for month wise by using a wallet money \n Step 4: Each Month costs 100rs" });
@@ -221,12 +217,10 @@ const addSubscription = async (req, res) => {
 
 const adminNonPremiumUser = async (req, res) => {
     try {
-        console.log("1");
         const user1 = await userService.Findone({ "username": req.art })
         if (user1.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
-        console.log("1");
         let user = await userService.Where({ usertype: 'Non Premium User' });
         res.status(200).send({ status: 200, message: "Showing Non Premium Users", data: user });
     }

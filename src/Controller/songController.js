@@ -18,7 +18,7 @@ const addSong = async (req, res) => {
             songtype: req.body.songtype,
             Artist: req.body.Artist
         }
-        const user = await userService.Findone({username: req.art})
+        const user = await userService.Findone({ username: req.art })
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
@@ -32,7 +32,7 @@ const addSong = async (req, res) => {
 
 const updateSong = async (req, res) => {
     try {
-        const user = await userService.Findone("username", req.art)
+        const user = await userService.Findone({"username":req.art})
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
@@ -48,7 +48,7 @@ const updateSong = async (req, res) => {
 
 const deleteSong = async (req, res) => {
     try {
-        const user = await userService.Findone("username", req.art)
+        const user = await userService.Findone({"username":req.art})
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
@@ -63,15 +63,11 @@ const deleteSong = async (req, res) => {
 
 const showPublicSongs = async (req, res) => {
     try {
-        console.log("1");
         const user = await userService.Findone({ username: req.art })
-        console.log("2");
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
-        console.log("3");
-        const npmsongs = await songService.Where({songtype: 'public'});
-        console.log("4");
+        const npmsongs = await songService.Where({ songtype: 'public' });
         res.status(200).send({ status: 200, message: "Showing Public Songs", data: npmsongs });
     }
     catch (err) {
@@ -81,11 +77,11 @@ const showPublicSongs = async (req, res) => {
 
 const showPremiumSongs = async (req, res) => {
     try {
-        const user = await userService.Findone({username: req.art})
+        const user = await userService.Findone({ username: req.art })
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
-        const premsongs = await songService.Where({songtype:'Premium'});
+        const premsongs = await songService.Where({ songtype: 'Premium' });
         res.status(200).send({ status: 200, message: "Showing Premium Songs", data: premsongs });
     }
     catch (err) {
@@ -95,11 +91,11 @@ const showPremiumSongs = async (req, res) => {
 
 const artistSong = async (req, res) => {
     try {
-        const user = await userService.Findone({username:req.art})
+        const user = await userService.Findone({ username: req.art })
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
-        const art = await songService.Where({"Artist": req.body.Artist});
+        const art = await songService.Where({ "Artist": req.body.Artist });
         res.status(200).send({ status: 200, message: "Showing Your Songs", data: art });
     }
     catch (err) {
@@ -109,7 +105,7 @@ const artistSong = async (req, res) => {
 
 const userLike = async (req, res) => {
     try {
-        const user = await userService.Findone({username: req.art})
+        const user = await userService.Findone({ username: req.art })
         if (user.Verification != "Verified") {
             return res.status(400).send({ status: 400, message: " Your account is not verified " });
         }
